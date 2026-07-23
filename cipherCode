@@ -1,0 +1,118 @@
+import java.util.Scanner;
+
+public class CipherTexts
+{
+   public static void main(String[]args)
+   {
+      // variables for the encryption
+      Scanner scan = new Scanner(System.in);
+      String key = "";
+      String textString = "";
+      int row = 0; // row and column variables used for the loop encoding with Vigenere Cipher
+      int column = 0;
+      int keyIndex = 0; // variable to help too make a keyArray for ciphering process
+      String[] keyArray = {};
+      String[] textArray = {};
+      String[] cipherText = {};                                          // columns are text and rows are key
+      String[][] vigenereSquare = {{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}, // [0]
+                                   {"B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A"}, // [1]
+                                   {"C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B"}, // [2]
+                                   {"D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C"}, // [3]
+                                   {"E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D"}, // [4]
+                                   {"F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E"}, // [5]
+                                   {"G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F"}, // [6]
+                                   {"H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G"}, // [7]
+                                   {"I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H"}, // [8]
+                                   {"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I"}, // [9]
+                                   {"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"}, // [10]
+                                   {"L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"}, // [11]
+                                   {"M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"}, // [12]
+                                   {"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"}, // [13]
+                                   {"O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"}, // [14]
+                                   {"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"}, // [15]
+                                   {"Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"}, // [16]
+                                   {"R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q"}, // [17]
+                                   {"S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R"}, // [18]
+                                   {"T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S"}, // [19]
+                                   {"U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"}, // [20]
+                                   {"V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U"}, // [21]
+                                   {"W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V"}, // [22]
+                                   {"X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W"}, // [23]
+                                   {"Y", "Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X"}, // [24]
+                                   {"Z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y"}};// [25]
+        // inputs
+        System.out.println("Welcome to the program CipherTexts where this will cipher your text using the Vigenere Cipher. \n Now input a text that you want me to encode");
+        textString = scan.nextLine();
+        System.out.println("Good! \n Now input a code so this program can cipher your text properly.");
+        key = scan.nextLine();
+        // defining length for textArray(the text in array form we got as input)
+        textArray = new String[textString.length()];
+        // putting the text into an array
+        for(int s = 0; s < textString.length() ; s++)
+        {
+           textArray[s] = textString.substring(s, s+1);
+           //System.out.print(textArray[s]);
+        }
+        keyArray = new String[textArray.length];
+        // making the key array so we can decipher the array 
+        for(int a = 0; a < textArray.length; a++)
+        {
+           if(textArray[a].equals(" ") || textArray[a].equals("'") || textArray[a].equals(".") || textArray[a].equals(",") || textArray[a].equals("?") || textArray[a].equals("!") || textArray[a].equals("&"))
+           {
+              keyArray[a] = textArray[a];
+           }
+           else
+           {
+              keyArray[a] = key.substring(keyIndex, keyIndex + 1);
+              keyIndex = keyIndex + 1;
+           }
+           
+           if(keyIndex == key.length())
+           {
+              keyIndex = 0;
+           }
+           //System.out.print(keyArray[a]); 
+        }
+        // time to define length of the encoded array
+        cipherText = new String[textArray.length];
+        // time too use the cipher
+        for(int a = 0; a < textArray.length; a++)
+        {
+           if(textArray[a].equals(" ") || textArray[a].equals("'") || textArray[a].equals(".") || textArray[a].equals(",") || textArray[a].equals("?") || textArray[a].equals("!") || textArray[a].equals("&"))
+           {
+              cipherText[a] = textArray[a];
+           }
+           else
+           {
+              // figure out the column of the Vigenere Cipher
+              for(int c = 0; c < vigenereSquare[0].length; c++)
+              {
+                 if(vigenereSquare[0][c].equals(textArray[a].toUpperCase()))
+                 {
+                    column = c;
+                 }   
+              }
+              // figure out the row of the Vigenere Cipher
+              for(int r = 0; r < vigenereSquare.length; r++)
+              {
+                 if(vigenereSquare[r][0].equals(keyArray[a].toUpperCase()))
+                 {
+                    row = r;
+                 }
+              }
+              if(textArray[a].equals(textArray[a].toUpperCase()))
+              {
+                 cipherText[a] = vigenereSquare[row][column];
+              }
+              else
+              {
+                 cipherText[a] = vigenereSquare[row][column].toLowerCase();
+              }
+              
+              System.out.print(cipherText[a]);
+           }   
+        }
+        
+   }
+
+}
